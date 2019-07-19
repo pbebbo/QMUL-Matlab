@@ -54,36 +54,26 @@ end
 display('------------------------------')
 
 %% hist_stock_data Example
-% clear
+clear
 % todaydatestr  = datestr(today,'dd/mm/yyyy');
-% stock_data1 = getGoogleDailyData({'KO','PEP'},...
-% stock_data1 = get_yahoo_stockdata3({'KO','PEP'});
-%     '01/01/1990', todaydatestr, 'dd/mm/yyyy');
 
-stock_data1 = get_yahoo_stockdata3({'KO','PEP'}, '01-Jan-1990',now)
-price_series1 = [stock_data1{1}.adjClosePrice,...
-                     stock_data1{2}.adjClosePrice];
-date1         = [stock_data1{1}.DateTime,...
-                     stock_data1{2}.DateTime];
+stock_data1   = hist_stock_data('01011990','todaydatestr','KO','PEP');
+price_series1 = [stock_data1(1).AdjClose,...
+                     stock_data1(2).AdjClose];
+date1         = [stock_data1(1).Date,...
+                     stock_data1(2).Date];
 save('ko_pep_data1_new.mat','stock_data1')
 
 % 
-% % stock_data2   = hist_stock_data('01011990','31121998','KO','PEP');
-% stock_data2 = getGoogleDailyData({'KO','PEP'},...
-%     '01/01/1990', '31/12/1998', 'dd/mm/yyyy');
+stock_data2   = hist_stock_data('01011990','31121998','KO','PEP');
 
-stock_data2 = get_yahoo_stockdata3({'KO','PEP'}, '01-Jan-1990','31-Dec-1998')
-price_series2 = [stock_data2{1}.adjClosePrice,...
-                     stock_data2{2}.adjClosePrice];
-date2         = [stock_data2{1}.DateTime,...
-                     stock_data2{2}.DateTime];
+
+price_series2 = [stock_data2(1).AdjClose,...
+                     stock_data2(2).AdjClose];
+date2         = [stock_data2(1).Date,...
+                     stock_data2(2).Date];
 save('ko_pep_data2_new.mat','stock_data2')
-% price_series2 = [stock_data2.KO.AdjClose,...
-%                     stock_data2.PEP.AdjClose];
-% date2         = [stock_data2.KO.Date,...
-%                     stock_data2.PEP.Date];
-% 
-% save ko_pep_data2_new.mat
+
 
 
 %% Financial Data Example
@@ -92,13 +82,13 @@ clear all, close all
 warning off all
 rng('default');
 load('ko_pep_data1_new.mat')
-Volume1 = stock_data1{1}.volume;
+Volume1 = stock_data1(1).Volume;
 
 
-price_series1 = [stock_data1{1}.adjClosePrice,...
-                     stock_data1{2}.adjClosePrice];
-date1         = [stock_data1{1}.DateTime,...
-                     stock_data1{2}.DateTime];
+price_series1 = [stock_data1(1).AdjClose,...
+                     stock_data1(2).AdjClose];
+date1         = [stock_data1(1).Date,...
+                     stock_data1(2).Date];
 
 
 t = datenum(date1(:,1));

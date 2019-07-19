@@ -1,5 +1,4 @@
-%% INTRODUCTION TO MATLAB
-%  Session 1 Part 1 --- MATLAB BASICS
+%% MATLAB Exercises 1
 % ==============================
 
 % We will work through this file together, following the instructions

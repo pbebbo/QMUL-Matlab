@@ -58,7 +58,7 @@ w_space = zeros(NP,Nr);
 
 A   = [cov_mat e' xav';e 0 0;xav 0 0];
 
-for i=1:Nr,                       % generate (r,sig)-space
+for i=1:Nr                       % generate (r,sig)-space
     b(NP+2)=r(i);
     w=A\b;
     w0=w(1:NP);                   % Optimal wieght
@@ -72,8 +72,8 @@ xlabel('Risk, \sigma^2','fontsize',18),
 ylabel('Return, R','fontsize',18);
 
 %% Portfolio Optimisation - Real Data
-todaydatestr = datestr(today,'mmddyyyy');% Now with real data
-price = hist_stock_data('27102005',todaydatestr,'ADBE','AAPL','MSFT',...
+
+price = hist_stock_data('27102005','todaydatestr','ADBE','AAPL','MSFT',...
     'PEP','KO','^NDX');
 Ndays = length(price(1).Close);
 Nassets = length(price);
