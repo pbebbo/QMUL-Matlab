@@ -100,7 +100,7 @@ xlim([0,length(t)]),datetick
 title('Prices vs. Time')
 xlabel('t, Days','fontsize',14)
 ylabel('S_t','fontsize',14)
-set(gca,'fontsize',14)
+% set(gca,'fontsize',14)
 print('prices.eps','-depsc')
 
 %% Compute Daily Returns
@@ -113,7 +113,7 @@ size_lreturns = length(lreturns);
 
 %% Plot log-returns
 figure
-plot(t(1:end-1,1),lreturns(:,1)),datetick,
+plot(t(1:end-1,1),lreturns(:,1)),
 xlim([0,length(t)-1]),datetick
 title('log-returns vs. Time')
 xlabel('t, Days','fontsize',14)
@@ -283,6 +283,7 @@ figure,
 PD = makedist('tLocationScale', mean(lreturns(:,1)), std(lreturns(:,1)),3);
 qqplot(lreturns(:,1),PD)
 
+figure,
 % PD = ProbDistUnivParam('gev', [mean(lreturns(:,1)) std(lreturns(:,1)) 3]);
 PD = makedist('GeneralizedExtremeValue',mean(lreturns(:,1)), std(lreturns(:,1)), 3);
 
@@ -315,8 +316,8 @@ display('------------------------------')
 display('Parametric CVaR')
 m = mean(lreturns(:,1));
 s = std(lreturns(:,1));
-CVaR_95=m+s*(normpdf(-norminv(0.05,m,s),0,1))./(1-0.95);
-CVaR_99=m+s*(normpdf(-norminv(0.01,m,s),0,1))./(1-0.99);
+CVaR_95=-m+s*(normpdf(norminv(0.05,0,1),0,1))./(1-0.95);
+CVaR_99=-m+s*(normpdf(norminv(0.01,0,1),0,1))./(1-0.99);
 display(sprintf('CVaR 95: %.9f', CVaR_95))
 display(sprintf('CVaR 99: %.9f', CVaR_99))
 display('------------------------------')
