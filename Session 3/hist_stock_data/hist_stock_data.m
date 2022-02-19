@@ -159,39 +159,39 @@ for i = 1:length(tickers)
         '%s?period1=%d&period2=%d&interval=1%s&events=%s'], ...
         tickers{i}, startDate, endDate, freq, event);
     
-    % Call data from Yahoo Finance
-    [temp, status] = urlread(url,'post',{'matlabstockdata@yahoo.com', 'historical stocks'});
+    % Create webread options variable to specify UserAgent
+    options = weboptions('UserAgent', 'Mozilla/5.0');
+    
+    % Try to download stock data. Put in try/catch block in case it fails
+    try
+        temp = webread(url, 'matlabstockdata@yahoo.com', 'historical stocks', options);
         
-    % If data was downloaded successfully, then proceed to process it.
-    % Otherwise, ignore this ticker symbol
-    if status
-        
-        % Put data into appropriate variables
-        if strcmp(event, 'history')     % If historical prices
-            
-            % Parse out the historical data
-            data = textscan(temp, '%s%f%f%f%f%f%f', 'delimiter', ',', ...
-                'Headerlines', 1);
-
-            [stocks(idx).Date, stocks(idx).Open, stocks(idx).High, ...
-                stocks(idx).Low, stocks(idx).Close, ...
-                stocks(idx).AdjClose, stocks(idx).Volume] = deal(data{:});
-            
-        % If dividends
-        else
-            
-            % Parse out the dividend data
-            data = textscan(temp, '%s%f', 'delimiter', ',', ...
-                'Headerlines', 1);
-            
-            [stocks(idx).Date, stocks(idx).Dividend] = deal(data{:});
-        end
-
-        stocks(idx).Ticker = tickers{i};	% Store ticker symbol
-        
-        idx = idx + 1;                      % Increment stock index
+    % If data retrieval fails, skip to next ticker
+    catch
+        continue
     end
-        
+    
+    % Write ticker symbol
+    stocks(idx).Ticker = tickers{i};
+    
+    % Put data into appropriate variables
+    if strcmp(event, 'history')     % If historical prices
+        stocks(idx).Date = temp.Date;
+        stocks(idx).Open = temp.Open;
+        stocks(idx).High = temp.High;
+        stocks(idx).Low = temp.Low;
+        stocks(idx).Close = temp.Close;
+        stocks(idx).AdjClose = temp.AdjClose;
+        stocks(idx).Volume = temp.Volume;
+                
+    else                            % If dividends
+        stocks(idx).Date = temp.Date;
+        stocks(idx).Dividend = temp.Dividends;
+    end
+
+    % Increment stock index
+    idx = idx + 1;                      
+
     % update waitbar
     waitbar(i/length(tickers),h)
 end
