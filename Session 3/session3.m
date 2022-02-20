@@ -58,6 +58,7 @@ clear
 % todaydatestr  = datestr(today,'dd/mm/yyyy');
 
 stock_data1   = hist_stock_data('01011990','todaydatestr','KO','PEP');
+stock_data1   = hist_stock_data('01011990','todaydatestr','KO','PEP','^FTSE', 'AAPL');
 price_series1 = [stock_data1(1).AdjClose,...
                      stock_data1(2).AdjClose];
 date1         = [stock_data1(1).Date,...

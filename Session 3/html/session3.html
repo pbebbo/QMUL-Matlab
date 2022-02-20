@@ -1,0 +1,743 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Matlab Course Session 2 part 2</title><meta name="generator" content="MATLAB 9.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-02-19"><meta name="DC.source" content="session3.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Matlab Course Session 2 part 2</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Functions</a></li><li><a href="#2">I/O Example 1</a></li><li><a href="#3">I/O Example 2</a></li><li><a href="#4">I/O Example 3</a></li><li><a href="#5">Times Table</a></li><li><a href="#6">hist_stock_data Example</a></li><li><a href="#7">Financial Data Example</a></li><li><a href="#8">Plot Prices</a></li><li><a href="#9">Compute Daily Returns</a></li><li><a href="#10">Compute Daily log-returns</a></li><li><a href="#11">Plot log-returns</a></li><li><a href="#12">Plot Volumes</a></li><li><a href="#13">Sample Statistics</a></li><li><a href="#14">Histogram</a></li><li><a href="#15">Autocorrelagram</a></li><li><a href="#16">Volatility</a></li><li><a href="#18">Volume vs. Volatility</a></li><li><a href="#19">qq-plots</a></li><li><a href="#20">Parametric VaR</a></li><li><a href="#21">Parametric CVaR</a></li></ul></div><h2 id="1">Functions</h2><pre class="codeinput">close <span class="string">all</span>
+[y, h] = mysin_func(0:pi/50:2*pi);
+</pre><img vspace="5" hspace="5" src="session3_01.png" alt=""> <h2 id="2">I/O Example 1</h2><pre class="codeinput">A = [1 2 3 4 5];
+fid = fopen(<span class="string">'some_data.txt'</span>, <span class="string">'w'</span>);
+fwrite(fid, A);
+fclose(fid);
+clear
+fid = fopen(<span class="string">'some_data.txt'</span>, <span class="string">'r'</span>);
+fread(fid)
+fclose(fid);
+</pre><pre class="codeoutput">
+ans =
+
+     1
+     2
+     3
+     4
+     5
+
+</pre><h2 id="3">I/O Example 2</h2><pre class="codeinput">str = <span class="string">'this is a test'</span>;
+fid = fopen(<span class="string">'test.txt'</span>, <span class="string">'w'</span>);
+fwrite(fid, str, <span class="string">'char'</span>);
+fclose(fid);
+fid = fopen(<span class="string">'test.txt'</span>, <span class="string">'r'</span>);
+fread(fid, 5, <span class="string">'uint8=&gt;char'</span>)
+fread(fid, 5, <span class="string">'char'</span>)
+fclose(fid);
+</pre><pre class="codeoutput">
+ans =
+
+  5&times;1 char array
+
+    't'
+    'h'
+    'i'
+    's'
+    ' '
+
+
+ans =
+
+   105
+   115
+    32
+    97
+    32
+
+</pre><h2 id="4">I/O Example 3</h2><pre class="codeinput">A = [1 2 3 4];
+fid = fopen(<span class="string">'some_data.txt'</span>, <span class="string">'w'</span>);
+fprintf(fid, <span class="string">'%i'</span>, A);
+fclose(fid);
+
+fid = fopen(<span class="string">'some_data.txt'</span>, <span class="string">'r'</span>);
+fscanf(fid, <span class="string">'%i'</span>,1)
+fclose(fid);
+</pre><pre class="codeoutput">
+ans =
+
+        1234
+
+</pre><h2 id="5">Times Table</h2><pre class="codeinput">display(<span class="string">'------------------------------'</span>)
+display(<span class="string">'Times Table:'</span>)
+fprintf(1,<span class="string">' X '</span>);<span class="comment">% fid indicates to write on the command window</span>
+<span class="keyword">for</span> i = 0:9
+    fprintf(1,<span class="string">'%2d '</span>,i);
+<span class="keyword">end</span>
+fprintf(1,<span class="string">'\n'</span>);
+<span class="keyword">for</span> i = 0:9
+    fprintf(1,<span class="string">'%2d '</span>,i);
+    <span class="keyword">for</span> j = 0:9
+        fprintf(1,<span class="string">'%2d '</span>,i*j);
+    <span class="keyword">end</span>
+    fprintf(1,<span class="string">'\n'</span>);
+<span class="keyword">end</span>
+display(<span class="string">'------------------------------'</span>)
+</pre><pre class="codeoutput">------------------------------
+Times Table:
+ X  0  1  2  3  4  5  6  7  8  9 
+ 0  0  0  0  0  0  0  0  0  0  0 
+ 1  0  1  2  3  4  5  6  7  8  9 
+ 2  0  2  4  6  8 10 12 14 16 18 
+ 3  0  3  6  9 12 15 18 21 24 27 
+ 4  0  4  8 12 16 20 24 28 32 36 
+ 5  0  5 10 15 20 25 30 35 40 45 
+ 6  0  6 12 18 24 30 36 42 48 54 
+ 7  0  7 14 21 28 35 42 49 56 63 
+ 8  0  8 16 24 32 40 48 56 64 72 
+ 9  0  9 18 27 36 45 54 63 72 81 
+------------------------------
+</pre><h2 id="6">hist_stock_data Example</h2><pre class="codeinput">clear
+<span class="comment">% todaydatestr  = datestr(today,'dd/mm/yyyy');</span>
+
+stock_data1   = hist_stock_data(<span class="string">'01011990'</span>,<span class="string">'todaydatestr'</span>,<span class="string">'KO'</span>,<span class="string">'PEP'</span>);
+stock_data1   = hist_stock_data(<span class="string">'01011990'</span>,<span class="string">'todaydatestr'</span>,<span class="string">'KO'</span>,<span class="string">'PEP'</span>,<span class="string">'^FTSE'</span>, <span class="string">'AAPL'</span>);
+price_series1 = [stock_data1(1).AdjClose,<span class="keyword">...</span>
+                     stock_data1(2).AdjClose];
+date1         = [stock_data1(1).Date,<span class="keyword">...</span>
+                     stock_data1(2).Date];
+save(<span class="string">'ko_pep_data1_new.mat'</span>,<span class="string">'stock_data1'</span>)
+
+<span class="comment">%</span>
+stock_data2   = hist_stock_data(<span class="string">'01011990'</span>,<span class="string">'31121998'</span>,<span class="string">'KO'</span>,<span class="string">'PEP'</span>);
+
+
+price_series2 = [stock_data2(1).AdjClose,<span class="keyword">...</span>
+                     stock_data2(2).AdjClose];
+date2         = [stock_data2(1).Date,<span class="keyword">...</span>
+                     stock_data2(2).Date];
+save(<span class="string">'ko_pep_data2_new.mat'</span>,<span class="string">'stock_data2'</span>)
+</pre><img vspace="5" hspace="5" src="session3_02.png" alt=""> <h2 id="7">Financial Data Example</h2><pre class="codeinput">clear <span class="string">all</span>, close <span class="string">all</span>
+warning <span class="string">off</span> <span class="string">all</span>
+rng(<span class="string">'default'</span>);
+load(<span class="string">'ko_pep_data1_new.mat'</span>)
+Volume1 = stock_data1(1).Volume;
+
+
+price_series1 = [stock_data1(1).AdjClose,<span class="keyword">...</span>
+                     stock_data1(2).AdjClose];
+date1         = [stock_data1(1).Date,<span class="keyword">...</span>
+                     stock_data1(2).Date];
+
+
+t = datenum(date1(:,1));
+</pre><h2 id="8">Plot Prices</h2><pre class="codeinput">figure,
+plot(t,price_series1(:,1)),
+xlim([0,length(t)]),datetick
+title(<span class="string">'Prices vs. Time'</span>)
+xlabel(<span class="string">'t, Days'</span>,<span class="string">'fontsize'</span>,14)
+ylabel(<span class="string">'S_t'</span>,<span class="string">'fontsize'</span>,14)
+<span class="comment">% set(gca,'fontsize',14)</span>
+print(<span class="string">'prices.eps'</span>,<span class="string">'-depsc'</span>)
+</pre><img vspace="5" hspace="5" src="session3_03.png" alt=""> <h2 id="9">Compute Daily Returns</h2><pre class="codeinput">returns      = diff(price_series1)./price_series1(2:end,:);
+size_returns = length(returns);
+</pre><h2 id="10">Compute Daily log-returns</h2><pre class="codeinput">lreturns      = price2ret(price_series1);
+size_lreturns = length(lreturns);
+</pre><h2 id="11">Plot log-returns</h2><pre class="codeinput">figure
+plot(t(1:end-1,1),lreturns(:,1)),
+xlim([0,length(t)-1]),datetick
+title(<span class="string">'log-returns vs. Time'</span>)
+xlabel(<span class="string">'t, Days'</span>,<span class="string">'fontsize'</span>,14)
+ylabel(<span class="string">'log-return'</span>,<span class="string">'fontsize'</span>,14)
+set(gca,<span class="string">'fontsize'</span>,14)
+print(<span class="string">'log_returns.eps'</span>,<span class="string">'-depsc'</span>)
+</pre><img vspace="5" hspace="5" src="session3_04.png" alt=""> <h2 id="12">Plot Volumes</h2><pre class="codeinput">figure,
+plot(t,Volume1),
+xlim([0,length(t)]),datetick
+title(<span class="string">'Volumes vs. Time'</span>)
+xlabel(<span class="string">'t, Days'</span>,<span class="string">'fontsize'</span>,14)
+ylabel(<span class="string">'Volume'</span>,<span class="string">'fontsize'</span>,14)
+set(gca,<span class="string">'fontsize'</span>,14)
+print(<span class="string">'volumes.eps'</span>,<span class="string">'-depsc'</span>)
+</pre><img vspace="5" hspace="5" src="session3_05.png" alt=""> <h2 id="13">Sample Statistics</h2><pre class="codeinput">display(<span class="string">'------------------------------'</span>)
+display(<span class="string">'Sample Statistics:'</span>)
+mean_lr     = mean(lreturns(:,1));
+display(sprintf(<span class="string">'mean_lr  : %.9f'</span>, mean_lr))
+std_lr      = std(lreturns(:,1));
+display(sprintf(<span class="string">'std_lr   : %.9f'</span>, std_lr))
+min_lr      = min(lreturns(:,1));
+display(sprintf(<span class="string">'min_lr   : %.9f'</span>, min_lr))
+max_lr      = max(lreturns(:,1));
+display(sprintf(<span class="string">'max_lr   : %.9f'</span>, max_lr))
+ske_lr      = skewness(lreturns(:,1));
+display(sprintf(<span class="string">'ske_lr   : %.9f'</span>, ske_lr))
+kurt_lr     = kurtosis(lreturns(:,1));
+display(sprintf(<span class="string">'kurt_lr  : %.9f'</span>, kurt_lr))
+sacf_lr     = sacf(lreturns(:,1),1,1,0);
+display(sprintf(<span class="string">'sacf_lr  : %.9f'</span>, sacf_lr))
+sacf_lr2     = sacf(lreturns(:,1).^2,1,1,0);
+display(sprintf(<span class="string">'sacf_lr2 : %.9f'</span>, sacf_lr2))
+[jb_lr,pval,H]       = jarquebera(lreturns(:,1));
+display(sprintf(<span class="string">'jb_lr    : %i'</span>, H))
+[q1, pval1] = ljungbox(lreturns(:,1)',20);
+[q2, pval2] = ljungbox(lreturns(:,1)'.^2,20);
+kst_lr      = kstest(lreturns(:,1));
+display(sprintf(<span class="string">'kst_lr   : %i'</span>, kst_lr))
+display(<span class="string">'------------------------------'</span>)
+</pre><pre class="codeoutput">------------------------------
+Sample Statistics:
+mean_lr  : 0.000400915
+std_lr   : 0.014064417
+min_lr   : -0.110720830
+max_lr   : 0.129970432
+ske_lr   : -0.094285393
+kurt_lr  : 9.537332361
+</pre><pre class="codeoutput error">Undefined function 'sacf' for input arguments of type 'double'.
+
+Error in session3 (line 152)
+sacf_lr     = sacf(lreturns(:,1),1,1,0);
+</pre><h2 id="14">Histogram</h2><pre class="codeinput">[freq,bin]=hist(lreturns(:,1),500);
+figure
+bar(bin,freq/sum(freq))
+hold <span class="string">on</span>
+m = mean(lreturns(:,1));
+s = std(lreturns(:,1));
+x = [min(lreturns(:,1)):(max(lreturns(:,1))-min(lreturns(:,1)))<span class="keyword">...</span>
+    /1000:max(lreturns(:,1))];
+plot(x,normpdf(x,m,s)*(bin(2)-bin(1)),<span class="string">'-m'</span>,<span class="string">'linewidth'</span>,2)
+<span class="comment">% axis([-2 2 0 max(freq/sum(freq))*1.1])</span>
+axis <span class="string">tight</span>
+legend({<span class="string">'log-return'</span>,<span class="string">'normal'</span>})
+title(<span class="string">'log-return relative frequency distribution'</span>,<span class="string">'fontsize'</span>,14)
+xlabel(<span class="string">'log-return'</span>,<span class="string">'fontsize'</span>,14)
+ylabel(<span class="string">'relative frequency'</span>,<span class="string">'fontsize'</span>,14)
+set(gca,<span class="string">'fontsize'</span>,14)
+print(<span class="string">'fat_tails.eps'</span>,<span class="string">'-depsc'</span>)
+
+
+<span class="comment">%%CCDF</span>
+figure,
+lreturns1 = lreturns(:,1);
+loglog(sort(lreturns1(lreturns1&gt;0)),1-[1:(length(lreturns1(lreturns1&gt;0)))]<span class="keyword">...</span>
+    /length(lreturns1(lreturns1&gt;0)),<span class="string">'+b'</span>)
+hold <span class="string">on</span>
+loglog(sort(-lreturns1(lreturns1&lt;0)),1-[1:(length(lreturns1(lreturns1&lt;0)))]<span class="keyword">...</span>
+    /length(lreturns1(lreturns1&lt;0)),<span class="string">'xr'</span>)
+x = [max(lreturns1)/1000:max(lreturns1)/1000:max(lreturns1)];
+loglog(x,1-(normcdf(x,m,s)-0.5)*2,<span class="string">'-m'</span>,<span class="string">'linewidth'</span>,2)
+<span class="comment">% axis([1e-3 0.5 0.5e-1 1])</span>
+axis <span class="string">tight</span>
+legend({<span class="string">'pos ret'</span>,<span class="string">'neg ret'</span>,<span class="string">'normal'</span>})
+title(<span class="string">'complemetary cumulative log-return distribution'</span>,<span class="string">'fontsize'</span>,14)
+xlabel(<span class="string">'log-return'</span>,<span class="string">'fontsize'</span>,14)
+ylabel(<span class="string">'complemetary cumulative distribution'</span>,<span class="string">'fontsize'</span>,14)
+set(gca,<span class="string">'fontsize'</span>,14)
+print(<span class="string">'fat_tailsCum.eps'</span>,<span class="string">'-depsc'</span>)
+</pre><h2 id="15">Autocorrelagram</h2><pre class="codeinput">figure
+[a1,lags1] = autocorr(lreturns(:,1),250);
+plot(lags1,a1,<span class="string">'-r'</span>)
+hold <span class="string">on</span>
+[a2,lags2] = autocorr(abs(lreturns(:,1)),250);
+plot(lags2,a2,<span class="string">'-m'</span>)
+[a3,lags3] = autocorr(lreturns(:,1).^2,250);
+plot(lags3,a3,<span class="string">'-b'</span>)
+plot([0 300],[0 0],<span class="string">'-k'</span>)
+axis([0 250 -.15 1])
+xlabel(<span class="string">'lags (days)'</span>,<span class="string">'fontsize'</span>,14)
+ylabel(<span class="string">'autocorrelation'</span>,<span class="string">'fontsize'</span>,14)
+title(<span class="string">'KO autocorrelation of log-returns'</span>,<span class="string">'fontsize'</span>,14)
+set(gca,<span class="string">'fontsize'</span>,14)
+legend({<span class="string">'log-returns'</span>,<span class="string">'|log-returns|'</span>,<span class="string">'log-returns^2'</span>})
+print(<span class="string">'autocorrelation1Day.eps'</span>,<span class="string">'-depsc'</span>)
+</pre><h2 id="16">Volatility</h2><pre class="codeinput">window = 252;
+Y1 = cumsum(lreturns(:,1),1);
+Y2 = cumsum(lreturns(:,1).^2,1);
+volatility = sqrt((Y2((window+1):end)-Y2(1:(end-window)))<span class="keyword">...</span>
+    /window-((Y1((window+1):end)-Y1(1:(end-window)))/window).^2);
+
+Y1 = cumsum(Volume1(2:end),1) ;
+Y2 = cumsum(Volume1(2:end).^2,1) ;
+meanVolume = sqrt((Y2((window+1):end)-Y2(1:(end-window)))<span class="keyword">...</span>
+    /window-((Y1((window+1):end)-Y1(1:(end-window)))/window).^2);
+
+figure,
+subplot(2,1,1)
+hold <span class="string">on</span>,
+plot(t((window+2):end),volatility),
+xlim([0,size(t((window+2):end),1)]),datetick,
+xlabel(<span class="string">'date'</span>,<span class="string">'fontsize'</span>,14)
+ylabel(<span class="string">'volatility'</span>,<span class="string">'fontsize'</span>,14)
+set(gca,<span class="string">'fontsize'</span>,14)
+hold <span class="string">off</span>
+subplot(2,1,2)
+plot(t((window+2):end),meanVolume),
+xlim([0,size(t((window+2):end),1)]),datetick,
+xlabel(<span class="string">'date'</span>,<span class="string">'fontsize'</span>,14)
+ylabel(<span class="string">'volume'</span>,<span class="string">'fontsize'</span>,14)
+set(gca,<span class="string">'fontsize'</span>,14)
+print(<span class="string">'volatility.eps'</span>,<span class="string">'-depsc'</span>)
+</pre><pre class="codeinput">output1 = tsmovavg(lreturns(:,1)'.^2,<span class="string">'e'</span>,252);
+output2 = tsmovavg(lreturns(:,1)'.^2,<span class="string">'s'</span>,252);
+figure,
+hold <span class="string">on</span>,
+plot(t(2:end),sqrt(output1)),
+plot(t(2:end),sqrt(output2),<span class="string">'r'</span>),
+datetick,
+hold <span class="string">off</span>
+
+
+<span class="comment">% todaydatestr  = datestr(today,'mmddyyyy');</span>
+<span class="comment">% stock_data3   = hist_stock_data('01011990',todaydatestr,'KO','PEP');</span>
+<span class="comment">% vol = EstimateVol(stock_data1(1).Open(end:-1:1),stock_data1(1).High(end:-1:1),stock_data1(1).Low(end:-1:1),stock_data1(1).Close(end:-1:1),window)</span>
+
+c=corrcoef(meanVolume,volatility);
+</pre><h2 id="18">Volume vs. Volatility</h2><pre class="codeinput">figure,
+plot((meanVolume),(volatility),<span class="string">'+b'</span>)
+text(0.6*max(meanVolume),0.6*max(volatility),<span class="keyword">...</span>
+    [<span class="string">'correlation coeff = '</span>,num2str(c(1,2))],<span class="string">'fontsize'</span>,14)
+xlabel(<span class="string">'volume'</span>,<span class="string">'fontsize'</span>,14)
+ylabel(<span class="string">'volatility'</span>,<span class="string">'fontsize'</span>,14)
+set(gca,<span class="string">'fontsize'</span>,14)
+print(<span class="string">'volume_volatility.eps'</span>,<span class="string">'-depsc'</span>)
+</pre><h2 id="19">qq-plots</h2><pre class="codeinput">figure,
+qqplot(lreturns(:,1)),
+
+figure,
+<span class="comment">% PD = ProbDistUnivParam('t', [mean(lreturns(:,1)) std(lreturns(:,1)) 3]);</span>
+PD = makedist(<span class="string">'tLocationScale'</span>, mean(lreturns(:,1)), std(lreturns(:,1)),3);
+qqplot(lreturns(:,1),PD)
+
+figure,
+<span class="comment">% PD = ProbDistUnivParam('gev', [mean(lreturns(:,1)) std(lreturns(:,1)) 3]);</span>
+PD = makedist(<span class="string">'GeneralizedExtremeValue'</span>,mean(lreturns(:,1)), std(lreturns(:,1)), 3);
+
+qqplot(lreturns(:,1),PD)
+</pre><h2 id="20">Parametric VaR</h2><pre class="codeinput">display(<span class="string">'------------------------------'</span>)
+display(<span class="string">'Parametric VaR'</span>)
+VaR_95=portvrisk(mean(returns(:,1)), std(returns(:,1)),0.05,1);
+VaR_99=portvrisk(mean(returns(:,1)), std(returns(:,1)),0.01,1);
+display(sprintf(<span class="string">'VaR 95: %.9f'</span>, VaR_95))
+display(sprintf(<span class="string">'VaR 99: %.9f'</span>, VaR_99))
+display(<span class="string">'------------------------------'</span>)
+<span class="comment">%note that is  parametric estimation of VaR not a non-parameteric makesure</span>
+<span class="comment">%you know the difference</span>
+display(<span class="string">'Empirical VaR'</span>)
+slr=sort(lreturns); <span class="comment">% sorted log returns</span>
+N = length(slr);
+VaR_95_emp=-(slr(ceil(N*0.05))+slr(floor(N*0.05)))/2; <span class="comment">% 5% loss</span>
+VaR_99_emp=-(slr(ceil(N*0.01))+slr(floor(N*0.01)))/2; <span class="comment">% 1% loss</span>
+display(sprintf(<span class="string">'VaR 95: %.9f'</span>, VaR_95_emp))
+display(sprintf(<span class="string">'VaR 99: %.9f'</span>, VaR_99_emp))
+display(<span class="string">'------------------------------'</span>)
+</pre><h2 id="21">Parametric CVaR</h2><pre class="codeinput">display(<span class="string">'------------------------------'</span>)
+display(<span class="string">'Parametric CVaR'</span>)
+m = mean(lreturns(:,1));
+s = std(lreturns(:,1));
+CVaR_95=-m+s*(normpdf(norminv(0.05,0,1),0,1))./(1-0.95);
+CVaR_99=-m+s*(normpdf(norminv(0.01,0,1),0,1))./(1-0.99);
+display(sprintf(<span class="string">'CVaR 95: %.9f'</span>, CVaR_95))
+display(sprintf(<span class="string">'CVaR 99: %.9f'</span>, CVaR_99))
+display(<span class="string">'------------------------------'</span>)
+<span class="comment">%note that is  parametric estimation of VaR not a non-parameteric makesure</span>
+<span class="comment">%you know the difference</span>
+display(<span class="string">'Empirical CVaR'</span>)
+CVaR_95_emp=-mean(slr(1:ceil(N*0.05))); <span class="comment">% 5% loss</span>
+CVaR_99_emp=-mean(slr(1:ceil(N*0.01))); <span class="comment">% 1% loss</span>
+display(sprintf(<span class="string">'CVaR 95: %.9f'</span>, CVaR_95_emp))
+display(sprintf(<span class="string">'CVaR 99: %.9f'</span>, CVaR_99_emp))
+display(<span class="string">'------------------------------'</span>)
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Matlab Course Session 2 part 2
+
+
+%% Functions
+close all
+[y, h] = mysin_func(0:pi/50:2*pi);
+
+
+%% I/O Example 1
+A = [1 2 3 4 5];
+fid = fopen('some_data.txt', 'w');
+fwrite(fid, A);
+fclose(fid);
+clear
+fid = fopen('some_data.txt', 'r');
+fread(fid)
+fclose(fid);
+
+%% I/O Example 2
+str = 'this is a test';
+fid = fopen('test.txt', 'w');
+fwrite(fid, str, 'char');
+fclose(fid);
+fid = fopen('test.txt', 'r');
+fread(fid, 5, 'uint8=>char')
+fread(fid, 5, 'char')
+fclose(fid);
+
+%% I/O Example 3
+A = [1 2 3 4];
+fid = fopen('some_data.txt', 'w');
+fprintf(fid, '%i', A);
+fclose(fid);
+
+fid = fopen('some_data.txt', 'r');
+fscanf(fid, '%i',1)
+fclose(fid);
+
+%% Times Table
+display('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH')
+display('Times Table:')
+fprintf(1,' X ');% fid indicates to write on the command window
+for i = 0:9
+    fprintf(1,'%2d ',i);
+end
+fprintf(1,'\n');
+for i = 0:9
+    fprintf(1,'%2d ',i);
+    for j = 0:9
+        fprintf(1,'%2d ',i*j);
+    end
+    fprintf(1,'\n');
+end
+display('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH')
+
+%% hist_stock_data Example
+clear
+% todaydatestr  = datestr(today,'dd/mm/yyyy');
+
+stock_data1   = hist_stock_data('01011990','todaydatestr','KO','PEP');
+stock_data1   = hist_stock_data('01011990','todaydatestr','KO','PEP','^FTSE', 'AAPL');
+price_series1 = [stock_data1(1).AdjClose,...
+                     stock_data1(2).AdjClose];
+date1         = [stock_data1(1).Date,...
+                     stock_data1(2).Date];
+save('ko_pep_data1_new.mat','stock_data1')
+
+% 
+stock_data2   = hist_stock_data('01011990','31121998','KO','PEP');
+
+
+price_series2 = [stock_data2(1).AdjClose,...
+                     stock_data2(2).AdjClose];
+date2         = [stock_data2(1).Date,...
+                     stock_data2(2).Date];
+save('ko_pep_data2_new.mat','stock_data2')
+
+
+
+%% Financial Data Example
+
+clear all, close all
+warning off all
+rng('default');
+load('ko_pep_data1_new.mat')
+Volume1 = stock_data1(1).Volume;
+
+
+price_series1 = [stock_data1(1).AdjClose,...
+                     stock_data1(2).AdjClose];
+date1         = [stock_data1(1).Date,...
+                     stock_data1(2).Date];
+
+
+t = datenum(date1(:,1));
+
+%% Plot Prices
+figure,
+plot(t,price_series1(:,1)),
+xlim([0,length(t)]),datetick
+title('Prices vs. Time')
+xlabel('t, Days','fontsize',14)
+ylabel('S_t','fontsize',14)
+% set(gca,'fontsize',14)
+print('prices.eps','-depsc')
+
+%% Compute Daily Returns
+returns      = diff(price_series1)./price_series1(2:end,:);
+size_returns = length(returns);
+
+%% Compute Daily log-returns
+lreturns      = price2ret(price_series1);
+size_lreturns = length(lreturns);
+
+%% Plot log-returns
+figure
+plot(t(1:end-1,1),lreturns(:,1)),
+xlim([0,length(t)-1]),datetick
+title('log-returns vs. Time')
+xlabel('t, Days','fontsize',14)
+ylabel('log-return','fontsize',14)
+set(gca,'fontsize',14)
+print('log_returns.eps','-depsc')
+
+
+%% Plot Volumes
+figure,
+plot(t,Volume1),
+xlim([0,length(t)]),datetick
+title('Volumes vs. Time')
+xlabel('t, Days','fontsize',14)
+ylabel('Volume','fontsize',14)
+set(gca,'fontsize',14)
+print('volumes.eps','-depsc')
+
+
+%% Sample Statistics
+display('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH')
+display('Sample Statistics:')
+mean_lr     = mean(lreturns(:,1));
+display(sprintf('mean_lr  : %.9f', mean_lr))
+std_lr      = std(lreturns(:,1));
+display(sprintf('std_lr   : %.9f', std_lr))
+min_lr      = min(lreturns(:,1));
+display(sprintf('min_lr   : %.9f', min_lr))
+max_lr      = max(lreturns(:,1));
+display(sprintf('max_lr   : %.9f', max_lr))
+ske_lr      = skewness(lreturns(:,1));
+display(sprintf('ske_lr   : %.9f', ske_lr))
+kurt_lr     = kurtosis(lreturns(:,1));
+display(sprintf('kurt_lr  : %.9f', kurt_lr))
+sacf_lr     = sacf(lreturns(:,1),1,1,0);
+display(sprintf('sacf_lr  : %.9f', sacf_lr))
+sacf_lr2     = sacf(lreturns(:,1).^2,1,1,0);
+display(sprintf('sacf_lr2 : %.9f', sacf_lr2))
+[jb_lr,pval,H]       = jarquebera(lreturns(:,1));
+display(sprintf('jb_lr    : %i', H))
+[q1, pval1] = ljungbox(lreturns(:,1)',20);
+[q2, pval2] = ljungbox(lreturns(:,1)'.^2,20);
+kst_lr      = kstest(lreturns(:,1));
+display(sprintf('kst_lr   : %i', kst_lr))
+display('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH')
+
+%% Histogram
+[freq,bin]=hist(lreturns(:,1),500);
+figure
+bar(bin,freq/sum(freq))
+hold on
+m = mean(lreturns(:,1));
+s = std(lreturns(:,1));
+x = [min(lreturns(:,1)):(max(lreturns(:,1))-min(lreturns(:,1)))...
+    /1000:max(lreturns(:,1))];
+plot(x,normpdf(x,m,s)*(bin(2)-bin(1)),'-m','linewidth',2)
+% axis([-2 2 0 max(freq/sum(freq))*1.1])
+axis tight
+legend({'log-return','normal'})
+title('log-return relative frequency distribution','fontsize',14)
+xlabel('log-return','fontsize',14)
+ylabel('relative frequency','fontsize',14)
+set(gca,'fontsize',14)
+print('fat_tails.eps','-depsc')
+
+
+%%CCDF
+figure,
+lreturns1 = lreturns(:,1);
+loglog(sort(lreturns1(lreturns1>0)),1-[1:(length(lreturns1(lreturns1>0)))]...
+    /length(lreturns1(lreturns1>0)),'+b')
+hold on
+loglog(sort(-lreturns1(lreturns1<0)),1-[1:(length(lreturns1(lreturns1<0)))]...
+    /length(lreturns1(lreturns1<0)),'xr')
+x = [max(lreturns1)/1000:max(lreturns1)/1000:max(lreturns1)];
+loglog(x,1-(normcdf(x,m,s)-0.5)*2,'-m','linewidth',2)
+% axis([1e-3 0.5 0.5e-1 1])
+axis tight 
+legend({'pos ret','neg ret','normal'})
+title('complemetary cumulative log-return distribution','fontsize',14)
+xlabel('log-return','fontsize',14)
+ylabel('complemetary cumulative distribution','fontsize',14)
+set(gca,'fontsize',14)
+print('fat_tailsCum.eps','-depsc')
+
+
+
+%% Autocorrelagram
+figure
+[a1,lags1] = autocorr(lreturns(:,1),250);
+plot(lags1,a1,'-r')
+hold on
+[a2,lags2] = autocorr(abs(lreturns(:,1)),250);
+plot(lags2,a2,'-m')
+[a3,lags3] = autocorr(lreturns(:,1).^2,250);
+plot(lags3,a3,'-b')
+plot([0 300],[0 0],'-k')
+axis([0 250 -.15 1])
+xlabel('lags (days)','fontsize',14)
+ylabel('autocorrelation','fontsize',14)
+title('KO autocorrelation of log-returns','fontsize',14)
+set(gca,'fontsize',14)
+legend({'log-returns','|log-returns|','log-returns^2'})
+print('autocorrelation1Day.eps','-depsc')
+
+%% Volatility
+window = 252;
+Y1 = cumsum(lreturns(:,1),1);
+Y2 = cumsum(lreturns(:,1).^2,1);
+volatility = sqrt((Y2((window+1):end)-Y2(1:(end-window)))...
+    /window-((Y1((window+1):end)-Y1(1:(end-window)))/window).^2);
+
+Y1 = cumsum(Volume1(2:end),1) ;
+Y2 = cumsum(Volume1(2:end).^2,1) ;
+meanVolume = sqrt((Y2((window+1):end)-Y2(1:(end-window)))...
+    /window-((Y1((window+1):end)-Y1(1:(end-window)))/window).^2);
+
+figure,
+subplot(2,1,1)
+hold on,
+plot(t((window+2):end),volatility),
+xlim([0,size(t((window+2):end),1)]),datetick,
+xlabel('date','fontsize',14)
+ylabel('volatility','fontsize',14)
+set(gca,'fontsize',14)
+hold off
+subplot(2,1,2)
+plot(t((window+2):end),meanVolume),
+xlim([0,size(t((window+2):end),1)]),datetick,
+xlabel('date','fontsize',14)
+ylabel('volume','fontsize',14)
+set(gca,'fontsize',14)
+print('volatility.eps','-depsc')
+
+%%
+output1 = tsmovavg(lreturns(:,1)'.^2,'e',252);
+output2 = tsmovavg(lreturns(:,1)'.^2,'s',252);
+figure,
+hold on,
+plot(t(2:end),sqrt(output1)),
+plot(t(2:end),sqrt(output2),'r'),
+datetick,
+hold off
+
+
+% todaydatestr  = datestr(today,'mmddyyyy');
+% stock_data3   = hist_stock_data('01011990',todaydatestr,'KO','PEP');
+% vol = EstimateVol(stock_data1(1).Open(end:-1:1),stock_data1(1).High(end:-1:1),stock_data1(1).Low(end:-1:1),stock_data1(1).Close(end:-1:1),window)
+
+c=corrcoef(meanVolume,volatility);
+%% Volume vs. Volatility
+figure,
+plot((meanVolume),(volatility),'+b')
+text(0.6*max(meanVolume),0.6*max(volatility),...
+    ['correlation coeff = ',num2str(c(1,2))],'fontsize',14)
+xlabel('volume','fontsize',14)
+ylabel('volatility','fontsize',14)
+set(gca,'fontsize',14)
+print('volume_volatility.eps','-depsc')
+
+%% qq-plots
+figure,
+qqplot(lreturns(:,1)),
+
+figure,
+% PD = ProbDistUnivParam('t', [mean(lreturns(:,1)) std(lreturns(:,1)) 3]);
+PD = makedist('tLocationScale', mean(lreturns(:,1)), std(lreturns(:,1)),3);
+qqplot(lreturns(:,1),PD)
+
+figure,
+% PD = ProbDistUnivParam('gev', [mean(lreturns(:,1)) std(lreturns(:,1)) 3]);
+PD = makedist('GeneralizedExtremeValue',mean(lreturns(:,1)), std(lreturns(:,1)), 3);
+
+qqplot(lreturns(:,1),PD)
+
+
+%% Parametric VaR
+display('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH')
+display('Parametric VaR')
+VaR_95=portvrisk(mean(returns(:,1)), std(returns(:,1)),0.05,1);
+VaR_99=portvrisk(mean(returns(:,1)), std(returns(:,1)),0.01,1);
+display(sprintf('VaR 95: %.9f', VaR_95))
+display(sprintf('VaR 99: %.9f', VaR_99))
+display('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH')
+%note that is  parametric estimation of VaR not a non-parameteric makesure
+%you know the difference
+display('Empirical VaR')
+slr=sort(lreturns); % sorted log returns
+N = length(slr);
+VaR_95_emp=-(slr(ceil(N*0.05))+slr(floor(N*0.05)))/2; % 5% loss
+VaR_99_emp=-(slr(ceil(N*0.01))+slr(floor(N*0.01)))/2; % 1% loss
+display(sprintf('VaR 95: %.9f', VaR_95_emp))
+display(sprintf('VaR 99: %.9f', VaR_99_emp))
+display('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH')
+
+
+
+%% Parametric CVaR
+display('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH')
+display('Parametric CVaR')
+m = mean(lreturns(:,1));
+s = std(lreturns(:,1));
+CVaR_95=-m+s*(normpdf(norminv(0.05,0,1),0,1))./(1-0.95);
+CVaR_99=-m+s*(normpdf(norminv(0.01,0,1),0,1))./(1-0.99);
+display(sprintf('CVaR 95: %.9f', CVaR_95))
+display(sprintf('CVaR 99: %.9f', CVaR_99))
+display('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH')
+%note that is  parametric estimation of VaR not a non-parameteric makesure
+%you know the difference
+display('Empirical CVaR')
+CVaR_95_emp=-mean(slr(1:ceil(N*0.05))); % 5% loss
+CVaR_99_emp=-mean(slr(1:ceil(N*0.01))); % 1% loss
+display(sprintf('CVaR 95: %.9f', CVaR_95_emp))
+display(sprintf('CVaR 99: %.9f', CVaR_99_emp))
+display('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH')
+##### SOURCE END #####
+--></body></html>
