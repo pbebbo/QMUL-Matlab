@@ -1,4 +1,4 @@
-%% Matlab Course Session 2 part 2
+%% Matlab Course Session 3
 
 
 %% Functions

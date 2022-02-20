@@ -1,4 +1,4 @@
-%% Matlab Course Session 7
+%% Matlab Course Session 4
 
 %% Function Handle
 fun = @(x)((2*pi).^(-0.5))*exp((-0.5)*x.^2);
