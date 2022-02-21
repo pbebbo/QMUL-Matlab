@@ -94,7 +94,7 @@ end
 cov_mat=cov(X);
 e = ones(1,Nassets);
 
-r   = 0:0.0001:0.001;
+r   = -0.001:0.0001:0.001;
 Nr = length(r);
 sig = zeros(1,Nr);
 b = [zeros(Nassets,1);1;0];
