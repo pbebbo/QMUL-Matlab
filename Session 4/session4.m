@@ -73,15 +73,16 @@ ylabel('Return, R','fontsize',18);
 
 %% Portfolio Optimisation - Real Data
 
-price = hist_stock_data('27102005','todaydatestr','ADBE','AAPL','MSFT',...
-    'PEP','KO','^NDX');
-Ndays = length(price(1).Close);
-Nassets = length(price);
+symbols = {'ADBE', 'AAPL', 'MSFT', 'PEP', 'KO', 'NASDX'};
+stock_data1 = getMarketDataViaTiingo(symbols, '01-Jan-2010', datetime('today'), 'daily');
+
+Ndays = length(stock_data1(1).AdjClose);
+Nassets = length(stock_data1);
 X = zeros(Ndays-1,Nassets);
 T = Ndays-1;
 for i=1:Nassets
-    price(i).Rreturn = price2ret(price(i).Close(end:-1:1));
-    X(:,i) = price(i).Rreturn;
+    stock_data1(i).Rreturn = price2ret(stock_data1(i).AdjClose);
+    X(:,i) = stock_data1(i).Rreturn;
 end
 
 
