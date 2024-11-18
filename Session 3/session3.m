@@ -53,46 +53,35 @@ for i = 0:9
 end
 display('------------------------------')
 
-%% hist_stock_data Example
+
+%% Stock Data Example
 clear
-% todaydatestr  = datestr(today,'dd/mm/yyyy');
-
-stock_data1   = hist_stock_data('01011990','todaydatestr','KO','PEP');
-stock_data1   = hist_stock_data('01011990','todaydatestr','KO','PEP','^FTSE', 'AAPL');
-price_series1 = [stock_data1(1).AdjClose,...
-                     stock_data1(2).AdjClose];
-date1         = [stock_data1(1).Date,...
-                     stock_data1(2).Date];
-save('ko_pep_data1_new.mat','stock_data1')
-
-% 
-stock_data2   = hist_stock_data('01011990','31121998','KO','PEP');
-
-
-price_series2 = [stock_data2(1).AdjClose,...
-                     stock_data2(2).AdjClose];
-date2         = [stock_data2(1).Date,...
-                     stock_data2(2).Date];
-save('ko_pep_data2_new.mat','stock_data2')
-
-
-
-%% Financial Data Example
-
-clear all, close all
 warning off all
 rng('default');
+
+% Get current data for KO and PEP
+symbols = {'KO', 'PEP'};
+stock_data1 = getMarketDataViaTiingo(symbols, '01-Jan-2010', datetime('today'), 'daily');
+
+if ~isempty(stock_data1)
+    save('ko_pep_data1_new.mat','stock_data1')
+end
+
+% Get historical data
+stock_data2 = getMarketDataViaTiingo(symbols, '01-Jan-2000', '31-Dec-2010', 'daily');
+
+if ~isempty(stock_data2)
+    save('ko_pep_data2_new.mat','stock_data2')
+end
+
+%% Financial Data Example
 load('ko_pep_data1_new.mat')
 Volume1 = stock_data1(1).Volume;
 
-
+t = datenum(stock_data1(1).Date);
 price_series1 = [stock_data1(1).AdjClose,...
-                     stock_data1(2).AdjClose];
-date1         = [stock_data1(1).Date,...
-                     stock_data1(2).Date];
+                stock_data1(2).AdjClose];
 
-
-t = datenum(date1(:,1));
 
 %% Plot Prices
 figure,
@@ -114,7 +103,7 @@ size_lreturns = length(lreturns);
 
 %% Plot log-returns
 figure
-plot(t(1:end-1,1),lreturns(:,1)),
+plot(t(1:end-1),lreturns(:,1)),
 xlim([0,length(t)-1]),datetick
 title('log-returns vs. Time')
 xlabel('t, Days','fontsize',14)
@@ -204,12 +193,12 @@ print('fat_tailsCum.eps','-depsc')
 
 %% Autocorrelagram
 figure
-[a1,lags1] = autocorr(lreturns(:,1),250);
+[a1,lags1] = autocorr(lreturns(:,1),NumLags=250);
 plot(lags1,a1,'-r')
 hold on
-[a2,lags2] = autocorr(abs(lreturns(:,1)),250);
+[a2,lags2] = autocorr(abs(lreturns(:,1)),NumLags=250);
 plot(lags2,a2,'-m')
-[a3,lags3] = autocorr(lreturns(:,1).^2,250);
+[a3,lags3] = autocorr(lreturns(:,1).^2,NumLags=250);
 plot(lags3,a3,'-b')
 plot([0 300],[0 0],'-k')
 axis([0 250 -.15 1])
@@ -330,3 +319,75 @@ CVaR_99_emp=-mean(slr(1:ceil(N*0.01))); % 1% loss
 display(sprintf('CVaR 95: %.9f', CVaR_95_emp))
 display(sprintf('CVaR 99: %.9f', CVaR_99_emp))
 display('------------------------------')
+
+%% Risk Measures and Backtesting
+clear violations_95 violations_99
+
+% Calculate VaR violations
+actual_returns = returns(:,1);  % Use first stock's returns
+n_obs = length(actual_returns);
+
+% Count violations
+violations_95 = sum(actual_returns < -VaR_95);
+violations_99 = sum(actual_returns < -VaR_99);
+
+% Expected number of violations
+expected_violations_95 = n_obs * 0.05;
+expected_violations_99 = n_obs * 0.01;
+
+% Violation rates
+violation_rate_95 = (violations_95/n_obs) * 100;
+violation_rate_99 = (violations_99/n_obs) * 100;
+
+% Perform Kupiec tests
+[h95, p95, stat95] = kupiectest(violations_95, n_obs, 0.05);
+[h99, p99, stat99] = kupiectest(violations_99, n_obs, 0.01);
+
+% Display results
+fprintf('\nBacktesting Results:\n');
+fprintf('----------------------------------------\n');
+fprintf('95%% VaR Analysis:\n');
+fprintf('Actual violations:   %d\n', violations_95);
+fprintf('Expected violations: %.0f\n', expected_violations_95);
+fprintf('Violation rate:      %.2f%%\n', violation_rate_95);
+fprintf('Kupiec test p-value: %.4f\n', p95);
+fprintf('Reject H0 at 5%%:     %s\n', logical2str(h95));
+
+fprintf('\n99%% VaR Analysis:\n');
+fprintf('Actual violations:   %d\n', violations_99);
+fprintf('Expected violations: %.0f\n', expected_violations_99);
+fprintf('Violation rate:      %.2f%%\n', violation_rate_99);
+fprintf('Kupiec test p-value: %.4f\n', p99);
+fprintf('Reject H0 at 5%%:     %s\n', logical2str(h99));
+fprintf('----------------------------------------\n');
+
+% Helper function for readable output
+function str = logical2str(val)
+    if val
+        str = 'Yes (VaR estimate is inaccurate)';
+    else
+        str = 'No (VaR estimate is acceptable)';
+    end
+end
+
+%% Visualization
+% Plot returns and VaR
+figure;
+plot(returns)
+hold on
+plot([1 length(returns)], [-VaR_95 -VaR_95], 'r--', 'LineWidth', 2)
+plot([1 length(returns)], [-VaR_99 -VaR_99], 'g--', 'LineWidth', 2)
+legend('Returns', '95% VaR', '99% VaR')
+title('Returns with VaR Levels')
+xlabel('Time')
+ylabel('Return')
+
+% Plot return distribution with VaR and CVaR
+figure;
+histogram(returns, 50, 'Normalization', 'probability')
+hold on
+xline(-VaR_95, 'r--', '95% VaR')
+xline(-CVaR_95, 'g--', '95% CVaR')
+title('Return Distribution with Risk Measures')
+xlabel('Return')
+ylabel('Probability')
