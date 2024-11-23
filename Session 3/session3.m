@@ -170,7 +170,7 @@ set(gca,'fontsize',14)
 print('fat_tails.eps','-depsc')
 
 
-%%CCDF
+%% CCDF
 figure,
 lreturns1 = lreturns(:,1);
 loglog(sort(lreturns1(lreturns1>0)),1-[1:(length(lreturns1(lreturns1>0)))]...
@@ -188,8 +188,6 @@ xlabel('log-return','fontsize',14)
 ylabel('complemetary cumulative distribution','fontsize',14)
 set(gca,'fontsize',14)
 print('fat_tailsCum.eps','-depsc')
-
-
 
 %% Autocorrelagram
 figure
