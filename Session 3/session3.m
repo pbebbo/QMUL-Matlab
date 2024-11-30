@@ -356,7 +356,7 @@ fprintf('Actual violations:   %d\n', violations_99);
 fprintf('Expected violations: %.0f\n', expected_violations_99);
 fprintf('Violation rate:      %.2f%%\n', violation_rate_99);
 fprintf('Kupiec test p-value: %.4f\n', p99);
-fprintf('Reject H0 at 5%%:     %s\n', logical2str(h99));
+fprintf('Reject H0 at 1%%:     %s\n', logical2str(h99));
 fprintf('----------------------------------------\n');
 
 % Helper function for readable output

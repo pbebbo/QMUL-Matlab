@@ -3,7 +3,7 @@
 %% Function Handle
 fun = @(x)((2*pi).^(-0.5))*exp((-0.5)*x.^2);
 figure,
-ezplot(fun)
+fplot(fun)
 set(gca,'fontsize',14)
 xlabel('x','fontsize',18)
 ylabel('f(x)','fontsize',18,'rotation',360),
@@ -18,104 +18,20 @@ xlabel('x','fontsize',18)
 ylabel('y','fontsize',18,'rotation',360)
 title('({x}^{2}-{y}^{4}) {cos}({x}/{y}) = {0}','fontsize',18);
 hndl=get(gca,'Children');
-set(hndl,'LineWidth',0.5,'Color',[0 0 1]);
+set(hndl,'LineWidth', 0.5,'Color', [0 0 1]);
 
-%% Portfolio Optimisation - Synthetic Data
+%% Portfolio Optimization Example
+% Synthetic Data
+nmax = 1e4;
+[X_synth, xav_synth, NP] = generateSyntheticData(nmax);
+[sig_synth, r_synth, w_space_synth] = optimizePortfolio(X_synth, xav_synth, NP);
+plotEfficientFrontier(sig_synth, r_synth);
 
-nmax = 1e4;% first synthetic data
-model1 = garch('Constant',0.01,'GARCH',0.1,'ARCH',0.1);
-model2 = garch('Constant',0.01,'GARCH',0.2,'ARCH',0.2);
-model3 = garch('Constant',0.01,'GARCH',0.3,'ARCH',0.3);
-model4 = garch('Constant',0.01,'GARCH',0.4,'ARCH',0.4);
-model5 = garch('Constant',0.01,'GARCH',0.5,'ARCH',0.1);
-model6 = garch('Constant',0.01,'GARCH',0.1,'ARCH',0.7);
-
-[x1,rreturns1] = simulate(model1,nmax);
-[x2,rreturns2] = simulate(model2,nmax);
-[x3,rreturns3] = simulate(model3,nmax);
-[x4,rreturns4] = simulate(model4,nmax);
-[x5,rreturns5] = simulate(model5,nmax);
-[x6,rreturns6] = simulate(model6,nmax);
-
-X  = [rreturns1,rreturns2,rreturns3,rreturns4,rreturns5,rreturns6];
-NP = size(X,2);
-xav = zeros(1,NP);
-for i = 1:NP%normalise signals
-    xav(i) = mean(X(:,i));
-    X(:,i) = (X(:,i)-xav(i))./std(X(:,i));
-end
-
-cov_mat=cov(X);
-cor_mat=corrcoef(X);
-e = ones(1,NP);
-
-r   = -0.001:0.00001:0.001;
-Nr = length(r);
-sig = zeros(1,Nr);
-b = [zeros(NP,1);1;0];
-w_space = zeros(NP,Nr);
-
-
-A   = [cov_mat e' xav';e 0 0;xav 0 0];
-
-for i=1:Nr                       % generate (r,sig)-space
-    b(NP+2)=r(i);
-    w=A\b;
-    w0=w(1:NP);                   % Optimal wieght
-    sig(i)=w0'*cov_mat*w0;        % risk
-    w_space(:,i)=w0;
-end
-
-figure,
-plot(sig,r);
-xlabel('Risk, \sigma^2','fontsize',18),
-ylabel('Return, R','fontsize',18);
-
-%% Portfolio Optimisation - Real Data
-
-symbols = {'ADBE', 'AAPL', 'MSFT', 'PEP', 'KO', 'NASDX'};
-stock_data1 = getMarketDataViaTiingo(symbols, '01-Jan-2010', datetime('today'), 'daily');
-
-Ndays = length(stock_data1(1).AdjClose);
-Nassets = length(stock_data1);
-X = zeros(Ndays-1,Nassets);
-T = Ndays-1;
-for i=1:Nassets
-    stock_data1(i).Rreturn = price2ret(stock_data1(i).AdjClose);
-    X(:,i) = stock_data1(i).Rreturn;
-end
-
-
-xav = zeros(1,Nassets);
-for i = 1:Nassets%normalise signals
-    xav(i) = mean(X(:,i));
-    X(:,i) = (X(:,i)-xav(i))./std(X(:,i));
-end
-
-cov_mat=cov(X);
-e = ones(1,Nassets);
-
-r   = -0.001:0.0001:0.001;
-Nr = length(r);
-sig = zeros(1,Nr);
-b = [zeros(Nassets,1);1;0];
-w_space = zeros(Nassets,Nr);
-
-
-A   = [cov_mat e' xav';e 0 0;xav 0 0];
-
-for i=1:Nr,                       % generate (r,sig)-space
-    b(Nassets+2)=r(i);
-    w=A\b;
-    w0=w(1:Nassets);                   % Optimal wieght
-    sig(i)=w0'*cov_mat*w0;        % risk
-    w_space(:,i)=w0;
-end
-
-figure,
-plot(sig,r);
-xlabel('Risk, \sigma^2','fontsize',18),
-ylabel('Return, R','fontsize',18);
+% Real Data
+symbols = {'ADBE', 'AAPL', 'MSFT', 'PEP', 'KO', 'AMZN'};
+[X_real, xav_real, Nassets] = getRealData(symbols, '01-Jan-2010', datetime('today'));
+[sig_real, r_real, w_space_real] = optimizePortfolio(X_real, xav_real, Nassets);
+plotEfficientFrontier(sig_real, r_real);
 
 %% Coefficient of Determination
 [cor_mat,P_ttest]=corrcoef(X);
@@ -145,12 +61,12 @@ P_permutation_test = pp/1000
 
 %% Sharpe Ratio
 sharpe_ratio=xav./std(X);
-display(sprintf('sharpe_ratio_asset_1: %.9f', sharpe_ratio(1)))
-display(sprintf('sharpe_ratio_asset_2: %.9f', sharpe_ratio(2)))
-display(sprintf('sharpe_ratio_asset_3: %.9f', sharpe_ratio(3)))
-display(sprintf('sharpe_ratio_asset_4: %.9f', sharpe_ratio(4)))
-display(sprintf('sharpe_ratio_asset_5: %.9f', sharpe_ratio(5)))
-display(sprintf('sharpe_ratio_asset_6: %.9f', sharpe_ratio(6)))
+fprintf('sharpe_ratio_asset_1: %.9f\n', sharpe_ratio(1))
+fprintf('sharpe_ratio_asset_2: %.9f\n', sharpe_ratio(2))
+fprintf('sharpe_ratio_asset_3: %.9f\n', sharpe_ratio(3))
+fprintf('sharpe_ratio_asset_4: %.9f\n', sharpe_ratio(4))
+fprintf('sharpe_ratio_asset_5: %.9f\n', sharpe_ratio(5))
+fprintf('sharpe_ratio_asset_6: %.9f\n', sharpe_ratio(6))
 
 
 %% MSE Example
@@ -203,197 +119,137 @@ hold on
 plot(xplot,yplot)
 hold off
 
-%% Unregularised Regression
+%% Run Unregularised Regression
+close, clear, clc;
+runRegression(false);
 
-close all,clear all,clc
-%Start of the actual script
-noise = 0.05;
-%finishing number of data pts
-no_data_pts = 100;
-%increment in pts
-inc = 5;
-%Test points
-no_test_pts = 100;
-
-%three different polynomials to try and fit with
-underfit_coeff = [0,1,1]; %order 2
-close_coeff = [0,1,1,1]; %order 3
-overfit_coeff = [0,1,1,1,1,1,1,1,1,1]; %order 9
-
-%generate our data to learn
-data_pts = generate_data(@f,noise,no_data_pts);
-%generate our test data
-test_pts = generate_data(@f,noise,no_test_pts);
-x = linspace(0,1,1000);
-y = f(x);
-N_its = length(inc:inc:no_data_pts);
-x_RMS = zeros(1,N_its);
-y_RMS_data_under = zeros(1,N_its);
-y_RMS_data_close = zeros(1,N_its);
-y_RMS_data_over  = zeros(1,N_its);
-y_RMS_test_under = zeros(1,N_its);
-y_RMS_test_close = zeros(1,N_its);
-y_RMS_test_over  = zeros(1,N_its);
-%Loop through adding more data as we go to get better predictions
-for d = inc:inc:no_data_pts
-    underfit_coeff = fminsearch(@(c)unregularised_error(...
-        data_pts(1:d,:),c),underfit_coeff);
-    close_coeff = fminsearch(@(c)unregularised_error(...
-        data_pts(1:d,:),c),close_coeff);
-    overfit_coeff = fminsearch(@(c)unregularised_error(...
-        data_pts(1:d,:),c),overfit_coeff);
-    %plot our function predictions
-    y_under=zeros(size(x));
-    for j = 1:length(underfit_coeff)
-        y_under = y_under + (x.^(j-1))*underfit_coeff(j);
-    end
-    y_close=zeros(size(x));
-    for j = 1:length(close_coeff)
-        y_close = y_close + (x.^(j-1))*close_coeff(j);
-    end
-    y_over=zeros(size(x));
-    for j = 1:length(overfit_coeff)
-        y_over =y_over + (x.^(j-1))*overfit_coeff(j);
-    end
-    k = d./inc;
-    x_RMS(k) = d;
-    y_RMS_data_under(k) = RMS_error(data_pts(1:d,:),underfit_coeff);
-    y_RMS_data_close(k) = RMS_error(data_pts(1:d,:),close_coeff);
-    y_RMS_data_over(k)  = RMS_error(data_pts(1:d,:),overfit_coeff);
-    y_RMS_test_under(k) = RMS_error(test_pts,underfit_coeff);
-    y_RMS_test_close(k) = RMS_error(test_pts,close_coeff);
-    y_RMS_test_over(k)  = RMS_error(test_pts,overfit_coeff);
-    
-    %figure;
-    subplot(2,2,1);
-    plot(x,y_under,'b-',x,y,'g-',data_pts(1:d,1),data_pts(1:d,2),'ro');
-    axis([0,1,-1.5,1.5]);
-    title('d=2 Underfitting');
-    subplot(2,2,2);
-    plot(x,y_close,'b-',x,y,'g-',data_pts(1:d,1),data_pts(1:d,2),'ro');
-    axis([0,1,-1.5,1.5]);
-    title('d=3 close fitting')
-    subplot(2,2,3);
-    plot(x,y_over,'b-',x,y,'g-',data_pts(1:d,1),data_pts(1:d,2),'ro');
-    axis([0,1,-1.5,1.5]);
-    title('d=9 overfitting')
-    subplot(2,2,4);
-    plot(x_RMS,y_RMS_data_under,'bx-',x_RMS,y_RMS_test_under,'bx--',...
-        x_RMS,y_RMS_data_close,'rx-',x_RMS,y_RMS_test_close,'rx--',...
-        x_RMS,y_RMS_data_over,'gx-',x_RMS,y_RMS_test_over,'gx--');
-    axis([0,length(data_pts),0,1]);
-    title('RMS error')
-    legend('d=2 - data', 'd=2 - test','d=3 - data','d=3 - test',...
-        'd=9 - data','d=9 - test');
-    %print(num2str(d),'-dpng');
-    input('Press Enter to continue...\n');
-end
-
-%% Regularised Regression
-close all,clear all,clc
-%Start of the actual script
-noise = 0.05;
-%finishing number of data pts
-no_data_pts = 100;
-%increment in pts
-inc = 5;
-%Test points
-no_test_pts = 100;
-lambda = exp(-10);
-%three different polynomials to try and fit with
-underfit_coeff = [0,1,1]'; %order 2
-close_coeff = [0,1,1,1]'; %order 3
-overfit_coeff = [0,1,1,1,1,1,1,1,1,1]'; %order 9
-
-%generate our data to learn
-data_pts = generate_data(@f,noise,no_data_pts);
-%generate our test data
-test_pts = generate_data(@f,noise,no_test_pts);
-x = linspace(0,1,1000);
-y = f(x);
-N_its = length(inc:inc:no_data_pts);
-x_RMS = zeros(1,N_its);
-y_RMS_data_under = zeros(1,N_its);
-y_RMS_data_close = zeros(1,N_its);
-y_RMS_data_over  = zeros(1,N_its);
-y_RMS_test_under = zeros(1,N_its);
-y_RMS_test_close = zeros(1,N_its);
-y_RMS_test_over  = zeros(1,N_its);
-%Loop through adding more data as we go to get better predictions
-for d = inc:inc:no_data_pts
-    underfit_coeff = fminsearch(@(c)regularised_error(...
-        data_pts(1:d,:),c,lambda),underfit_coeff);
-    close_coeff = fminsearch(@(c)regularised_error(...
-        data_pts(1:d,:),c,lambda),close_coeff);
-    overfit_coeff = fminsearch(@(c)regularised_error(...
-        data_pts(1:d,:),c,lambda),overfit_coeff);
-    %plot our function predictions
-    y_under=zeros(size(x));
-    for j = 1:length(underfit_coeff)
-        y_under = y_under + (x.^(j-1))*underfit_coeff(j);
-    end
-    y_close=zeros(size(x));
-    for j = 1:length(close_coeff)
-        y_close = y_close + (x.^(j-1))*close_coeff(j);
-    end
-    y_over=zeros(size(x));
-    for j = 1:length(overfit_coeff)
-        y_over =y_over + (x.^(j-1))*overfit_coeff(j);
-    end
-    k = d./inc;
-    x_RMS(k) = d;
-    y_RMS_data_under(k) = RMS_error(data_pts(1:d,:),underfit_coeff);
-    y_RMS_data_close(k) = RMS_error(data_pts(1:d,:),close_coeff);
-    y_RMS_data_over(k)  = RMS_error(data_pts(1:d,:),overfit_coeff);
-    y_RMS_test_under(k) = RMS_error(test_pts,underfit_coeff);
-    y_RMS_test_close(k) = RMS_error(test_pts,close_coeff);
-    y_RMS_test_over(k)  = RMS_error(test_pts,overfit_coeff);
-    
-    %figure;
-    subplot(2,2,1);
-    plot(x,y_under,'b-',x,y,'g-',data_pts(1:d,1),data_pts(1:d,2),'ro');
-    axis([0,1,-1.5,1.5]);
-    title('d=2 Underfitting');
-    subplot(2,2,2);
-    plot(x,y_close,'b-',x,y,'g-',data_pts(1:d,1),data_pts(1:d,2),'ro');
-    axis([0,1,-1.5,1.5]);
-    title('d=3 close fitting')
-    subplot(2,2,3);
-    plot(x,y_over,'b-',x,y,'g-',data_pts(1:d,1),data_pts(1:d,2),'ro');
-    axis([0,1,-1.5,1.5]);
-    title('d=9 overfitting')
-    subplot(2,2,4);
-    plot(x_RMS,y_RMS_data_under,'bx-',x_RMS,y_RMS_test_under,'bx--',...
-        x_RMS,y_RMS_data_close,'rx-',x_RMS,y_RMS_test_close,'rx--',...
-        x_RMS,y_RMS_data_over,'gx-',x_RMS,y_RMS_test_over,'gx--');
-    axis([0,length(data_pts),0,1]);
-    title('RMS error')
-    legend('d=2 - data', 'd=2 - test','d=3 - data','d=3 - test',...
-        'd=9 - data','d=9 - test');
-    %print(num2str(d),'-dpng');
-    input('Press Enter to continue...\n');
-end
+%% Run Regularised Regression
+close, clear, clc;
+runRegression(true);
 
 %% Sigmoid Function
-close all,clear all;
-clc
-ezplot('1/(1+exp(-u))')
+close, clear, clc;
+fplot('1/(1+exp(-u))')
 
 
-%% Binary Logistic Regression:
-close all,clear all;
+%% Binary Logistic Regression Example
+close all; clear all;
 warning off;
 clc
 
-X = [0.30 0.05 -0.1 -0.05 0.6  0.0 -0.5  2.0  1.0  -0.4;   %yearly return
-     1    2     3    2    1    1    3    2    1     3  ;   %credit rating
-     0.02 0.08  0.05 0.09 0.04 0.07 0.02 0.01 0.01  0.03]';%debt/equity   
- 
-[N,D] =  size(X);
-ntrials = ones(N,1);%number on trails
-Y = [1 0 0 0 1 0 0 0 0 1]';
-credit_dummy= dummyvar(X(:,2));
-X(:,2)=[];
-X = [X credit_dummy(:,1:end-1)];
-[w dev stat] = glmfit( X, [Y ntrials], 'binomial', 'link', 'logit' );
-yfit = glmval(w, X, 'logit', 'size', ntrials);
+% Generate synthetic financial data
+rng(42); % Set random seed for reproducibility
+
+% Create expanded dataset
+N = 100; % Number of samples
+
+% Generate features separately for clarity
+yearly_return = randn(N,1)*0.2;          % Yearly return ~ N(0, 0.2)
+credit_rating = randi([1,3], N,1);       % Credit rating (1=A, 2=B, 3=C)
+debt_equity = rand(N,1)*0.1;             % Debt/Equity
+market_cap = rand(N,1)*1000;             % Market cap
+current_ratio = rand(N,1)*2 + 1;         % Current ratio
+
+% Combine features into matrix
+X = [yearly_return, credit_rating, debt_equity, market_cap, current_ratio];
+
+% Generate target variable (default probability)
+prob_default = 1./(1 + exp(-(- yearly_return + ...           % Lower returns increase default
+                             (credit_rating-2) + ...         % Lower credit rating increases default
+                             debt_equity*10 - ...            % Higher debt/equity increases default
+                             (market_cap/1000 - 0.5) - ...   % Lower market cap increases default
+                             (current_ratio - 2))));         % Lower current ratio increases default
+
+% Generate binary outcomes
+Y = rand(N,1) < prob_default;
+
+% Create dummy variables for credit rating
+credit_dummy = dummyvar(credit_rating);
+X(:,2) = [];  % Remove original credit rating
+X = [X credit_dummy(:,1:end-1)]; % Add dummy variables
+
+% Split data into training and test sets
+train_idx = 1:round(0.7*N);
+test_idx = (round(0.7*N)+1):N;
+
+X_train = X(train_idx,:);
+Y_train = Y(train_idx);
+X_test = X(test_idx,:);
+Y_test = Y(test_idx);
+
+% Fit logistic regression model
+ntrials = ones(length(train_idx),1);
+[w, dev, stats] = glmfit(X_train, [Y_train ntrials], 'binomial', 'link', 'logit');
+
+% Make predictions
+yfit_train = glmval(w, X_train, 'logit', 'size', ntrials);
+yfit_test = glmval(w, X_test, 'logit', 'size', ones(length(test_idx),1));
+
+% Calculate metrics
+threshold = 0.5;
+y_pred_train = yfit_train > threshold;
+y_pred_test = yfit_test > threshold;
+
+% Training metrics
+accuracy_train = mean(y_pred_train == Y_train);
+precision_train = sum(y_pred_train & Y_train) / sum(y_pred_train);
+recall_train = sum(y_pred_train & Y_train) / sum(Y_train);
+f1_train = 2 * (precision_train * recall_train) / (precision_train + recall_train);
+
+% Test metrics
+accuracy_test = mean(y_pred_test == Y_test);
+precision_test = sum(y_pred_test & Y_test) / sum(y_pred_test);
+recall_test = sum(y_pred_test & Y_test) / sum(Y_test);
+f1_test = 2 * (precision_test * recall_test) / (precision_test + recall_test);
+
+% Display results
+fprintf('Training Metrics:\n');
+fprintf('Accuracy: %.3f\n', accuracy_train);
+fprintf('Precision: %.3f\n', precision_train);
+fprintf('Recall: %.3f\n', recall_train);
+fprintf('F1 Score: %.3f\n\n', f1_train);
+
+fprintf('Test Metrics:\n');
+fprintf('Accuracy: %.3f\n', accuracy_test);
+fprintf('Precision: %.3f\n', precision_test);
+fprintf('Recall: %.3f\n', recall_test);
+fprintf('F1 Score: %.3f\n\n', f1_test);
+
+% Visualizations
+figure('Position', [100, 100, 1200, 400]);
+
+% ROC Curve
+subplot(1,3,1);
+[X_roc,Y_roc,T,AUC] = perfcurve(Y_test, yfit_test, 1);
+plot(X_roc, Y_roc);
+grid on;
+title(sprintf('ROC Curve (AUC = %.3f)', AUC));
+xlabel('False Positive Rate');
+ylabel('True Positive Rate');
+
+% Feature Importance
+subplot(1,3,2);
+feature_names = {'Return', 'D/E', 'MCap', 'CRatio', 'CreditA', 'CreditB'};
+bar(w(2:end));
+xticks(1:length(feature_names));
+xticklabels(feature_names);
+xtickangle(45);
+title('Feature Coefficients');
+grid on;
+
+% Prediction Distribution
+subplot(1,3,3);
+histogram(yfit_test(Y_test==0), 'BinWidth', 0.1, 'Normalization', 'probability');
+hold on;
+histogram(yfit_test(Y_test==1), 'BinWidth', 0.1, 'Normalization', 'probability');
+legend('No Default', 'Default');
+title('Prediction Distribution');
+xlabel('Predicted Probability');
+ylabel('Frequency');
+grid on;
+
+% Print model summary
+fprintf('Model Summary:\n');
+fprintf('Deviance: %.3f\n', dev);
+fprintf('Number of observations: %d\n', N);
+fprintf('Number of predictors: %d\n', size(X,2));
