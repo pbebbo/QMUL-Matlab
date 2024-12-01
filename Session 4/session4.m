@@ -39,7 +39,10 @@ X = X_real;
 T = size(X_real,1);  % Number of time periods (days) in the dataset
 [cor_mat,P_ttest] = corrcoef(X);  % Correlation matrix and statistical significance
 coeff_of_determination = cor_mat.^2;  % R-squared values showing strength of relationships
-
+imagesc(cor_mat)
+colorbar
+colormap('jet')
+axis square
 %% Stability Analysis of Correlations
 % Analyze how stable correlations are over time using rolling windows
 ct1 = zeros(Nassets);  % Accumulator for correlation values
@@ -147,7 +150,7 @@ runRegression(true);
 
 %% Sigmoid Function
 close, clear, clc;
-fplot('1/(1+exp(-u))')
+ezplot('1/(1+exp(-u))')
 
 
 %% Binary Logistic Regression Example
