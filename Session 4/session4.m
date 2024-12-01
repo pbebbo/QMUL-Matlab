@@ -36,7 +36,7 @@ plotEfficientFrontier(sig_real, r_real);
 %% Coefficient of Determination
 % Calculate correlation matrix and R-squared values
 X = X_real;
-T = size(X_real,1)  % Number of time periods (days) in the dataset
+T = size(X_real,1);  % Number of time periods (days) in the dataset
 [cor_mat,P_ttest] = corrcoef(X);  % Correlation matrix and statistical significance
 coeff_of_determination = cor_mat.^2;  % R-squared values showing strength of relationships
 
@@ -104,8 +104,8 @@ y = X*[0.3;1.0;-0.3]+randn(1000,1);
 mdl = fitlm(X,y)
 
 %% Polyfit Example
-clear all, close all,clc
-display('Polynomial fitting');
+clear, close,clc
+disp('Polynomial fitting');
 x = [1,2,3,4]';
 y = [3,2,0,5]';
 figure,
@@ -115,7 +115,7 @@ for k = 1:4
     xx = basis(x,k);
     w  = linreg(xx,y);
     c  = mse_cost(xx,y,w);
-    display(sprintf('Bases dimensions: %g, MSE: %.2f', k, c))
+    fprintf('Bases dimensions: %g, MSE: %.2f\n', k, c)
 end
 
 %plot the data
