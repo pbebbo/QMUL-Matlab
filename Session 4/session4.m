@@ -27,39 +27,57 @@ nmax = 1e4;
 [sig_synth, r_synth, w_space_synth] = optimizePortfolio(X_synth, xav_synth, NP);
 plotEfficientFrontier(sig_synth, r_synth);
 
-% Real Data
-symbols = {'ADBE', 'AAPL', 'MSFT', 'PEP', 'KO', 'AMZN'};
+% Real Data Analysis: Portfolio of Major Tech and Consumer Stocks
+symbols = {'ADBE', 'AAPL', 'MSFT', 'PEP', 'KO', 'AMZN'};  % Mix of tech and consumer staples
 [X_real, xav_real, Nassets] = getRealData(symbols, '01-Jan-2010', datetime('today'));
 [sig_real, r_real, w_space_real] = optimizePortfolio(X_real, xav_real, Nassets);
 plotEfficientFrontier(sig_real, r_real);
 
 %% Coefficient of Determination
-[cor_mat,P_ttest]=corrcoef(X);
-coeff_of_determination = cor_mat.^2;
+% Calculate correlation matrix and R-squared values
+X = X_real;
+T = size(X_real,1)  % Number of time periods (days) in the dataset
+[cor_mat,P_ttest] = corrcoef(X);  % Correlation matrix and statistical significance
+coeff_of_determination = cor_mat.^2;  % R-squared values showing strength of relationships
 
-%% Stability of Correlations Matrix
-ct1 = zeros(Nassets);
-ct2 = zeros(Nassets);
-w=0;
-for t=1:250:(T-250)
-    ct=corrcoef(X(t:t+250,:));
-    ct1 = ct1+ct;
-    ct2 = ct2+ct.^2;
-    w=w+1;
+%% Stability Analysis of Correlations
+% Analyze how stable correlations are over time using rolling windows
+ct1 = zeros(Nassets);  % Accumulator for correlation values
+ct2 = zeros(Nassets);  % Accumulator for squared correlations
+w = 0;  % Window counter
+for t = 1:250:(T-250)  % Rolling window of 250 trading days (approximately 1 year)
+    ct = corrcoef(X(t:t+250,:));  % Calculate correlation for current window
+    ct1 = ct1 + ct;    % Sum correlations
+    ct2 = ct2 + ct.^2; % Sum squared correlations
+    w = w + 1;
 end
-P_windows_mean = ct1/w
-P_windows_std = sqrt(ct2/w-P_windows_mean.^2)
+% Calculate mean and standard deviation of correlations across windows
+P_windows_mean = ct1/w  % Average correlation over all windows
+P_windows_std = sqrt(ct2/w-P_windows_mean.^2)  % Standard deviation of correlations
 
+% Permutation test to assess significance of correlations
 pp = zeros(Nassets);
-for t=1:1000 % permutations
-    ct=corrcoef([X(randperm(T),1),X(randperm(T),2),X(randperm(T),3),...
+for t = 1:1000  % 1000 permutations for robust statistical testing
+    % Randomly shuffle each asset's returns and calculate correlations
+    ct = corrcoef([X(randperm(T),1),X(randperm(T),2),X(randperm(T),3),...
         X(randperm(T),4),X(randperm(T),5),X(randperm(T),6)]);
-    pp = pp + (abs(ct)>=abs(cor_mat));
+    pp = pp + (abs(ct)>=abs(cor_mat));  % Count when random correlations exceed actual
 end
-P_ttest
-P_permutation_test = pp/1000
+
+% Statistical significance results
+P_ttest  % Standard statistical test results
+P_permutation_test = pp/1000  % Proportion of random correlations exceeding actual
+
+% Expected Results Interpretation:
+% - Strong correlations between similar sector stocks (e.g., PEP-KO)
+% - Moderate correlations among tech stocks (ADBE, AAPL, MSFT, AMZN)
+% - Lower cross-sector correlations
+% - P_windows_std shows correlation stability over time
+% - P_permutation_test validates correlation significance
+% - Low p-values in P_ttest indicate statistically significant correlations
 
 %% Sharpe Ratio
+xav = xav_real;
 sharpe_ratio=xav./std(X);
 fprintf('sharpe_ratio_asset_1: %.9f\n', sharpe_ratio(1))
 fprintf('sharpe_ratio_asset_2: %.9f\n', sharpe_ratio(2))
@@ -133,7 +151,7 @@ fplot('1/(1+exp(-u))')
 
 
 %% Binary Logistic Regression Example
-close all; clear all;
+close; clear;
 warning off;
 clc
 
