@@ -76,11 +76,11 @@ end
 
 %% Financial Data Example
 load('ko_pep_data1_new.mat')
-Volume1 = stock_data1(1).Volume;
+Volume1 = stock_data1(1).data.volume;
 
-t = datenum(stock_data1(1).Date);
-price_series1 = [stock_data1(1).AdjClose,...
-                stock_data1(2).AdjClose];
+t = datenum(stock_data1(1).data.Time);
+price_series1 = [stock_data1(1).data.adjClose,...
+                stock_data1(2).data.adjClose];
 
 
 %% Plot Prices
