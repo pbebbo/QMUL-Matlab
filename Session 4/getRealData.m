@@ -11,13 +11,13 @@ function [X, xav, Nassets] = getRealData(symbols, startDate, endDate)
 
     stock_data = getMarketDataViaTiingo(symbols, startDate, endDate, 'daily');
     
-    Ndays = length(stock_data(1).Close);
+    Ndays = length(stock_data(1).data.adjClose);
     Nassets = length(stock_data);
     X = zeros(Ndays-1, Nassets);
     
     % Calculate returns
     for i = 1:Nassets
-        X(:,i) = price2ret(stock_data(i).Close);
+        X(:,i) = price2ret(stock_data(i).data.adjClose);
     end
     
     % Normalize data
